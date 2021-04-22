@@ -1,5 +1,7 @@
-```C
-#include<winsock2.h>
+# 用`C++`语言实现`Client`和`Server`之间的通信
+```C/
+/*******************************需要的头文件*******************************/
+#include<winsock2.h>	/*1*/
 #include<iostream>
 #include<assert.h>
 #include<cstdlib>
@@ -7,13 +9,11 @@
 #define XECHO_PORT_NUMBER 123456
 using namespace std;
 
-#pragma comment (lib,"ws2_32")
+#pragma comment (lib,"ws2_32")	/*2*/
+/*******************************服务器发送子函数*******************************/
 static void echo_server(SOCKET fd,SOCKADDR_IN addr) {
-	//不可以修改指针，但是可以修改指针的指向的内容
-	char* const buffer = new char[8192];
-	cout << "a new connection start ipv4 " << inet_ntoa(addr.sin_addr) <<" port "<< ntohs(addr.sin_port)<<endl;
-	//inet_ntoa将网络地址转换为点分十进制
-	//ntohs network to host 网络字节顺序转化为主机字节顺序
+	char* const buffer = new char[8192];	/*3*/
+	cout << "a new connection start ipv4 " << inet_ntoa(addr.sin_addr) <<" port "<< ntohs(addr.sin_port)<<endl;	/*4*/
 	do {
 		int i = recv(fd, buffer, 8181, 0);
 		/*
@@ -53,7 +53,7 @@ static void echo_server(SOCKET fd,SOCKADDR_IN addr) {
 	delete[] buffer;
 	cout << "disconnection ipv4 " << inet_ntoa(addr.sin_addr) << " port " << ntohs(addr.sin_port) << endl;
 }
-
+/******************************* 服务器端 *******************************/
 static void Server() {
 	SOCKET lfd = socket(PF_INET, SOCK_STREAM, 0);
 	//int socket(int af, int type, int protocol);
@@ -86,6 +86,7 @@ static void Server() {
 	closesocket(lfd);
 	return;
 }
+/******************************* 客户端 *******************************/
 static void echo_client(const char* ipv4) {
 	SOCKET id = socket(PF_INET, SOCK_STREAM, 0);
 	SOCKADDR_IN addr;
@@ -129,10 +130,12 @@ static void echo_client(const char* ipv4) {
 		return;
 	}
 }
+/******************************* 提示端 *******************************/
 void usage() {	
 	cout << "server -s" << endl;
 	cout << "client -c[ipv4]" << endl;
 }
+/******************************* 主函数 *******************************/
 int main(int argc, char* argv[]) {
 	WSADATA foo;
 	WSAStartup(0x0202, &foo);
@@ -157,3 +160,15 @@ int main(int argc, char* argv[]) {
 	return 0;
 }
 ```
+### 这其中用到了一些函数和接口
+* 1.`<winsock2.h>`头文件是`Windows`平台下网络编程的头文件
+
+* 2.`#pragma comment (lib,"ws2_32")`是告诉编译器，在动态链接的时候，需要额外链接的库，这里如果使用`Visual Studio 2019`也可以在项目属性中配置，不过在代码中这是一种更加合理和常用的形式。
+同时，`#pragma`不同于`#include`,在预编译时，`include`会被通过递归解析方式展开，而`#pragma`会被保留，目的就是告诉编译器需要链接那些`dll`。
+这里如果不加这句话，在静态编译时，可以通过，生成`obj`文件，但是一旦执行，会报错，例如一些符号找不到，或者未定义，因为这些都在这个动态链接库中。
+
+* 3.`char* const buffer`这是`C++`一种常见的用法，表示一个常指针，即指针指向的变量不可以修改，但其内容可以修改。
+
+* 4.`inet_ntoa`函数作用为将网络地址转化为点分十进制输出
+`ntohs`函数，其含义为`network to host`将网络字节顺序转化为主机字节顺序，这里其实是一种规定，或者说协议，物理主机(CPU)有差异，为了保证网络上传输的内容是一致的，需要把主机字节转化为网络字节，
+处理数据时再将网络字节转化为主机字节。
