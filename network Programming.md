@@ -15,19 +15,13 @@ static void echo_server(SOCKET fd,SOCKADDR_IN addr) {
 	char* const buffer = new char[8192];	/*3*/
 	cout << "a new connection start ipv4 " << inet_ntoa(addr.sin_addr) <<" port "<< ntohs(addr.sin_port)<<endl;	/*4*/
 	do {
-		int i = recv(fd, buffer, 8181, 0);
-		/*
-		不论是客户还是服务器应用程序都用recv函数从TCP连接的另一端接收数据。该函数的第一个参数指定接收端套接字描述符；
-		第二个参数指明一个缓冲区，该缓冲区用来存放recv函数接收到的数据；
-		第三个参数指明buf的长度；
-		第四个参数一般置0。
-		返回值为copy字节数
-		*/
+		int i = recv(fd, buffer, 8181, 0);	/*5*/
 		if (i <= 0) {
 			break;
 		}
+		/*想要字符串输出，就需要0结尾构成一个字符串*/
 		buffer[i] = 0;
-		/*handle the buffer*/
+		/*handle the buffer 这里只是简单演示一个处理例子，大小写互换，之后返回给客户端*/
 		cout << "rev buffer " << buffer << endl;
 		i = 0;
 		while (buffer[i]) {
@@ -39,13 +33,7 @@ static void echo_server(SOCKET fd,SOCKADDR_IN addr) {
 			}
 			i++;
 		}
-		i = send(fd, buffer, i, 0);
-		/*
-		    该函数的第一个参数指定发送端套接字描述符；
-			 第二个参数指明一个存放应用程序要发送数据的缓冲区；
-			 第三个参数指明实际要发送的数据的字节数；
-			第四个参数一般置0。
-		*/
+		i = send(fd, buffer, i, 0);	/*6*/
 		if (i == SOCKET_ERROR) {
 			break;
 		}
@@ -61,8 +49,7 @@ static void Server() {
 	addr.sin_family = AF_INET;
 	addr.sin_addr.S_un.S_addr = INADDR_ANY;
 	addr.sin_port = htons(XECHO_PORT_NUMBER);
-
-	int i = bind(lfd, (const sockaddr*) &addr, sizeof(SOCKADDR_IN));
+	int i = bind(lfd, (const sockaddr*) &addr, sizeof(SOCKADDR_IN));	/*7*/
 	assert(i == NOERROR);
 	if (i != NO_ERROR) {
 		cout << "fail to bind the port with error :" << WSAGetLastError();
@@ -70,12 +57,11 @@ static void Server() {
 		exit(-1);
 	}
 	cout << "Server is running..." << endl;
-	listen(lfd, 100000);
+	listen(lfd, 100000);	/*8*/
 	do {
 	//accept the incoming tcp
 		i = sizeof(SOCKADDR_IN);
-		SOCKET id = accept(lfd,(sockaddr*) &addr,&i);
-		//int accept(int sockfd, void *addr, int *addrlen);
+		SOCKET id = accept(lfd,(sockaddr*) &addr,&i);	/*9*/
 		//一个套接口接收一个链接
 		if (id != INVALID_SOCKET) {
 			echo_server(id, addr);
@@ -172,3 +158,20 @@ int main(int argc, char* argv[]) {
 * 4.`inet_ntoa`函数作用为将网络地址转化为点分十进制输出
 `ntohs`函数，其含义为`network to host`将网络字节顺序转化为主机字节顺序，这里其实是一种规定，或者说协议，物理主机(CPU)有差异，为了保证网络上传输的内容是一致的，需要把主机字节转化为网络字节，
 处理数据时再将网络字节转化为主机字节。
+
+* 5.`recv`函数，不论是客户还是服务器应用程序都用`recv`函数从TCP连接的另一端接收数据。
+* * 该函数的第一个参数指定接收端套接字描述符`(SOCKET)`；
+* * 第二个参数指明一个缓冲区`(buffer)`，该缓冲区用来存放`recv`函数接收到的数据；
+* * 第三个参数指明buf的长度`(length of buffer)`；
+* * 第四个参数一般置`0`。
+* * 返回值为`copy`字节数
+* 6.`sned`函数
+* * 该函数的第一个参数指定发送端套接字描述符`(SOCKET)`;
+* * 第二个参数指明一个存放应用程序要发送数据的缓冲区`buffer`;
+* * 第三个参数指明实际要发送的数据的字节数`(length of buffer)`;
+* * 第四个参数一般置`0`。
+* * 由此可以看出两个函数的对称性，参数的含义和位置都是一一对应的
+* 7. `bind`函数其实是把套接字描述符与地址绑定在一起，一般服务器需要显示绑定，如果不绑定，操作系统会自动随机绑定一个，所以客户端可以不做此操作。
+* 8.`listen`函数的第2个参数实则为最大连接数量，这里其实因为是简单测试，所以任意填写即可
+* 9.`int accept(int sockfd, void *addr, int *addrlen);`函数，服务器端收到一个套接字连接，通过返回值能够知道是否连接成功
+* 
