@@ -78,9 +78,8 @@ static void echo_client(const char* ipv4) {
 	SOCKADDR_IN addr;
 	addr.sin_family = AF_INET;
 	addr.sin_port = htons(XECHO_PORT_NUMBER);
-	addr.sin_addr.S_un.S_addr = inet_addr(ipv4);
-	//inet_addr 将点分十进制转化为一个长整型数据
-	int i = connect(id, (const sockaddr*)& addr, sizeof(SOCKADDR_IN));
+	addr.sin_addr.S_un.S_addr = inet_addr(ipv4);	`/*10*/
+	int i = connect(id, (const sockaddr*)& addr, sizeof(SOCKADDR_IN));	/*11*/
 	if (i != NO_ERROR) {
 		cout << "connection failed!" << endl;
 		exit(-1);
@@ -128,7 +127,7 @@ int main(int argc, char* argv[]) {
 	if (argc <= 1) {
 		usage();
 	}
-	else if (argc == 2 && stricmp(argv[1], "-s") == 0){
+	else if (argc == 2 && stricmp(argv[1], "-s") == 0){	/*12*/
 		Server();
 	}
 	else if (stricmp(argv[1], "-c") == 0) {
@@ -169,9 +168,11 @@ int main(int argc, char* argv[]) {
 * * 该函数的第一个参数指定发送端套接字描述符`(SOCKET)`;
 * * 第二个参数指明一个存放应用程序要发送数据的缓冲区`buffer`;
 * * 第三个参数指明实际要发送的数据的字节数`(length of buffer)`;
-* * 第四个参数一般置`0`。
-* * 由此可以看出两个函数的对称性，参数的含义和位置都是一一对应的
+* * 第四个参数一般置`0`;
+* * 由此可以看出两个函数的对称性，参数的含义和位置都是一一对应的。
 * 7. `bind`函数其实是把套接字描述符与地址绑定在一起，一般服务器需要显示绑定，如果不绑定，操作系统会自动随机绑定一个，所以客户端可以不做此操作。
 * 8.`listen`函数的第2个参数实则为最大连接数量，这里其实因为是简单测试，所以任意填写即可
 * 9.`int accept(int sockfd, void *addr, int *addrlen);`函数，服务器端收到一个套接字连接，通过返回值能够知道是否连接成功
-* 
+* 10.`inet_addr`会将点分十进制转化为一个长整型数据，在用户端输入点分十进制会比较方便，但实际中，在网络编程中需要转化为一个标准数据格式发送，否则计算机无法识别。
+* 11.`connect`函数和bind的参数是类似的，作用是客户端主动连接服务器，服务器在这里是一个被动等待端。
+* 12`stricmp`是字符串比较函数，但是对大小写不敏感。
