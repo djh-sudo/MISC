@@ -176,3 +176,32 @@ int main(int argc, char* argv[]) {
 * 10.`inet_addr`会将点分十进制转化为一个长整型数据，在用户端输入点分十进制会比较方便，但实际中，在网络编程中需要转化为一个标准数据格式发送，否则计算机无法识别。
 * 11.`connect`函数和bind的参数是类似的，作用是客户端主动连接服务器，服务器在这里是一个被动等待端。
 * 12`stricmp`是字符串比较函数，但是对大小写不敏感。
+## 问题
+上面这种方式属于阻塞形式的通信，在`do-while()`循环中，服务器一次只能够为一个客户端服务，这不满足一般意义上的服务器的功能，因此了解CS通信原理后，需要对代码做简单修改。
+```C
+	do {
+		i = sizeof(SOCKADDR_IN);
+		SOCKET fd = accept(id, (sockaddr*)& addr, &i);
+		HANDLE h = CreateThread(NULL, 0, echo_server, (LPVOID)fd, 0, NULL);
+		CloseHandle(h);
+		//echo_server(fd,addr);//单线程阻塞方式
+	} while (true);
+```
+在原有的`//echo_server(fd,addr);`函数的调用位置，修改为`CreateThread`,即每次连接都新建立一个线程，而不是阻塞方式占据`CPU`。
+```C
+CreateThread`函数的原型为`HANDLE CreateThread(
+                    LPSECURITY_ATTRIBUTES lpThreadAttributes,
+                    DWORD dwStackSize,
+                    LPTHREAD_START_ROUTINE lpStartAddress,
+                    LPVOID lpParameter,
+                    DWORD dwCreationFlags,
+                    LPDWORD lpThreadID
+                   );
+```
+其中各个参数的含义大致如下
+* 1 `lpThreadAttrivutes`,一般设置为`NULL`,用于定义新线程的安全属性
+* 2 `dwStackSize`,分配字节数表示线程堆栈大小，默认值为`0`
+* 3 `lpStartAddress`,指向线程函数的地址
+* 4 `lpParameter`,传递给线程函数的参数
+* 5`dwCreationFlags`,一般为0
+* 6`lpThreadID`,创建线程的`id`编号,一般为`NULL`
