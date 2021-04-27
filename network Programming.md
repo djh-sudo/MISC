@@ -178,6 +178,7 @@ int main(int argc, char* argv[]) {
 * 12`stricmp`是字符串比较函数，但是对大小写不敏感。
 ## 问题
 上面这种方式属于阻塞形式的通信，在`do-while()`循环中，服务器一次只能够为一个客户端服务，这不满足一般意义上的服务器的功能，因此了解CS通信原理后，需要对代码做简单修改。
+### 修改位置1
 ```C
 	do {
 		i = sizeof(SOCKADDR_IN);
@@ -205,3 +206,16 @@ CreateThread`函数的原型为`HANDLE CreateThread(
 * 4 `lpParameter`,传递给线程函数的参数
 * 5`dwCreationFlags`,一般为0
 * 6`lpThreadID`,创建线程的`id`编号,一般为`NULL`
+### 修改位置2
+`echo_server`函数需要修改
+```C
+static DWORD CALLBACK echo_server(LPVOID lpv) {
+	SOCKET id = SOCKET(lpv);
+	SOCKADDR_IN addr;
+	addr.sin_family = AF_INET;
+	addr.sin_addr.S_un.S_addr = INADDR_ANY;
+	addr.sin_port = htons(PORT);
+	......
+	return 0;
+```
+主要修改的内容为，去掉原有的两个形参,将参数变为`(LPVOID lpv`,同时，函数的返回值为一个`DWORD`类型，这里函数我们返回`0`即可。
