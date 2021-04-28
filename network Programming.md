@@ -219,3 +219,10 @@ static DWORD CALLBACK echo_server(LPVOID lpv) {
 	return 0;
 ```
 主要修改的内容为，去掉原有的两个形参,将参数变为`(LPVOID lpv`,同时，函数的返回值为一个`DWORD`类型，这里函数我们返回`0`即可。
+# 运行环境
+```
+Windows 10
+Visual Studio 2019
+```
+### 编译时，禁止预编译头,否则`VS`会对函数安全性检查，需要把很多函数加上`_s`，变为安全函数。
+### if you have any question,pls contact with me by djh113@126.com
