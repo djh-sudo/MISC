@@ -100,4 +100,4 @@ public class Clock extends JFrame implements Runnable{
 * 4`drawOval`函数的`(x,y)`是圆(椭圆)的外接矩形的左上角顶点坐标
 
 ### deno
-![]()
+![](https://github.com/djh-sudo/MISC/blob/main/src/demo.gif)
