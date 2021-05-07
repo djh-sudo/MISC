@@ -77,7 +77,8 @@ File "Token.java" is being rebuilt.
 File "SimpleCharStream.java" is being rebuilt.
 Parser generated successfully.
 ```
-![]()
+![](https://github.com/djh-sudo/MISC/blob/main/src/javacc1.png)
+
 此时产生了`Adder.java`文件
 之后编译`java`文件
 * `javac Adder.java`
@@ -86,3 +87,5 @@ Parser generated successfully.
 * `java Adder "1+2020" `
 * 结果
 `2021`
+## 流程展示
+![](https://github.com/djh-sudo/MISC/blob/main/src/javacc_demo.gif)
