@@ -132,3 +132,157 @@ string pickHost(const char*purl) {
 	}
 }
 ```
+# Thanks for Watching ...
+# 源码
+```C
+
+#include <iostream>
+#include<winsock2.h>
+
+#include<assert.h>
+#include<cstdlib>
+#include<cstdio>
+#include<string>
+
+#pragma comment(lib,"ws2_32")
+using namespace std;
+const int BUFFER_SIZE = 1024 * 1024 * 8;
+
+/**************************** function declearation ***********************************/
+SOCKET wrapper(const ULONG ipv4);
+ULONG nameResolver(const char* phost);
+string pickHost(const char* purl);
+SOCKET connectServer(const char* purl);
+int buildHttpRequest(const char* purl, char* buffer, int idbuffer);
+int httpSender(SOCKET fd, char* buffer, int idbuffer);
+int httpReceiver(SOCKET fd, char* buffer, int idbuffer);
+void httpParser(const char* purl, char* buffer, int idbuffer);
+void spider(const char* purl);
+
+/*		input  ipv4 addr,the port is 80 */
+/*		return socket*/
+SOCKET wrapper(const ULONG ipv4) {
+	SOCKET fd = socket(PF_INET, SOCK_STREAM, 0);
+	SOCKADDR_IN addr;
+	int i;
+	addr.sin_family = AF_INET;
+	addr.sin_port = htons(80);
+	addr.sin_addr.S_un.S_addr = ipv4;
+
+	i = connect(fd, (const sockaddr*)& addr, sizeof(SOCKADDR_IN));
+	if (i == NOERROR) {
+		return fd;
+	}closesocket(fd);
+	return INVALID_SOCKET;
+}
+
+ULONG nameResolver(const char* phost) {
+	hostent* p = gethostbyname(phost);
+	if (p) {
+		return *(ULONG*)p->h_addr_list[0];
+	}
+	return 0;
+}
+
+string pickHost(const char*purl) {
+	const char* pbegin = strstr(purl, "://");
+	if (!pbegin) {
+		return "";
+	}
+	else {
+		char* pend = (char*)strstr(&pbegin[3], "/");
+		pbegin += 3;
+		*pend = 0;
+		string hostname = pbegin;
+		*pend = '/';
+		cout << "host " << hostname.c_str() << endl;
+		return hostname;
+	}
+}
+
+SOCKET connectServer(const char*purl) {
+	string host = pickHost(purl);
+	ULONG ipv4 = nameResolver(host.c_str());
+	return wrapper(ipv4);
+}
+
+int buildHttpRequest(const char*purl,char*buffer,int idbuffer) {
+	string host = pickHost(purl);
+	char* p = (char*)strstr(purl, "://");
+	p += 3;
+	p = strstr(p,"/");
+	int i = sprintf(buffer,
+				"GET %s HTTP/1.1\r\n"
+				"Host: %s\r\n"
+				"Accept-Type: */*\r\n"
+				"User-Agent: spider V01\r\n"
+				"Connection: close\r\n\r\n",
+				p,host.c_str()
+	);
+	return i;
+}
+
+int httpSender(SOCKET fd, char* buffer, int idbuffer) {
+	return send(fd, buffer, idbuffer, 0);
+}
+
+int httpReceiver(SOCKET fd, char* buffer, int idbuffer) {
+	int ttl = 0;
+	do {
+		int i = recv(fd, buffer, idbuffer, 0);
+		if (i <= 0) {
+			break;
+		}
+		else {
+			ttl += i;
+			idbuffer -= i;
+			buffer += i;
+		}
+	} while (idbuffer > 0);
+	return ttl;
+}
+
+void httpParser(const char* purl, char* buffer, int idbuffer) {
+	//处理数据
+	FILE* fp = fopen("temp.txt", "wb");
+	fwrite(buffer, 1, idbuffer, fp);
+	fclose(fp);
+	buffer[idbuffer] = 0;
+	cout << "reveive data " << endl << buffer << endl;;
+	return;
+}
+
+void spider(const char* purl) {
+	SOCKET fd = connectServer(purl);
+	char* buffer = new char[BUFFER_SIZE];
+	int i = buildHttpRequest(purl, buffer, BUFFER_SIZE);
+	i = httpSender(fd, buffer, i);
+	i = httpReceiver(fd, buffer, BUFFER_SIZE);
+	httpParser(purl, buffer, i);
+	closesocket(fd);
+	delete[] buffer;
+	return;
+}
+
+int main(int argc, char* argv[])
+{
+	WSADATA foo;
+	WSAStartup(0x0202, &foo);
+	setlocale(LC_ALL, "CN.UTF8"); //utf-8编码
+	
+	if (argc != 2 || strnicmp(argv[1], "http://", 7) != 0) {
+		cout << "usage " << endl << "<url> ->spider like the url http://www.njupt.edu.cn/" << endl;
+		exit(1);
+	}
+	string s = argv[1];
+	if (s.back() != '/') {
+		s += "/";
+	}
+	cout<<"url is " << s.c_str() << endl;
+	
+	spider(s.c_str());
+	WSACleanup();
+	return 0;
+}
+
+```
