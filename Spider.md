@@ -1,6 +1,6 @@
 # 网路爬虫(`Spider`)
 ### 通过`c++`程序抓取`url`对应的页面程序
-
+![](https://github.com/djh-sudo/MISC/blob/main/src/spider.png)
 ##  框架1(自顶向下原则)
  ```C
  void spider(const char* purl) {
