@@ -26,3 +26,6 @@ int cas(long*addr,long old,long new){
 * `C 11 <stdatomic.h>`
 * `C++ 11 STL atomic`
 * `JAVA compareAndSwap`
+
+## Other
+非阻塞算法(`Non-Blocking-Algorithm`)，一般都需要硬件提供原子读取-修改-写入原语，而`CAS`就是最著名的一种非阻塞算法。
