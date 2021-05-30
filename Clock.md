@@ -104,7 +104,7 @@ public class Clock extends JFrame implements Runnable {
 * 3`Calendar.MONTH`的范围是`0-11`，所以需要手动加`1`,才能表示真实的月份;
 * 4`drawOval`函数的`(x,y)`是圆(椭圆)的外接矩形的左上角顶点坐标
 
-### deno
+### demo
 ![](https://github.com/djh-sudo/MISC/blob/main/src/demo.gif)
 
 ### Question
