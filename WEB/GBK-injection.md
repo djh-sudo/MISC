@@ -7,7 +7,7 @@
 * 一般而言，需要使用多个字节编码的方式，我们称为宽字节编码
 
 ## Wide Byte Injection
-* `SQL`有一种注入的形式就是宽字节注入,题目节选自南京邮电大学`CGCTF`
+* `SQL`有一种注入的形式就是宽字节注入,题目节选自[南京邮电大学`CGCTF`](http://chinalover.sinaapp.com/SQL-GBK/index.php?id=1)
 * 当我们输入的内容为`http://chinalover.sinaapp.com/SQL-GBK/index.php?id=1'`
 * 返回的信息为
 ![]()
@@ -40,3 +40,8 @@
 *  `table_schema`就是数据表所属的数据库的名字，其实就是`database()`，只不过这里我们不能写`sae-chinalover`,因为单引号会被转义
 查询结果如下，可以看到这里有很多张表
 ![]()
+
+### 查询数据
+* 由于不知道具体`flag`在那一个表中，因此需要挨个查询一遍
+* 当执行`id=4%aa' union select * from ctf4 %23`
+* 得到查询结果为`flag{this_is_sqli_flag}`
