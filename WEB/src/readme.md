@@ -1,0 +1,1 @@
+# Source picture file
