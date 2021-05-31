@@ -33,7 +33,7 @@
 *  `id=4%aa' union select 1,database() %23`
 * 返回结果如下，这里得到了数据库的名字为`sae-chinalover`
 ### 读取数据库中全部的表名字
-*  * 一般而言，一个数据库中都会有一个`information_schema`，用于存储数据库的各种信息，包括数据库中所有的表/视图、
+*  一般而言，一个数据库中都会有一个`information_schema`，用于存储数据库的各种信息，包括数据库中所有的表/视图、
 *  用户权限等等，因此，获取数据库的表信息，一般通过查询`information_schema`。其中`tables表`存放了各种表的信息。
 *  构造查询语句`id=4%aa' union select 1,group_concat(table_name) from information_schema.tables where table_schema = database() %23`
 *  由于输出受限，因此使用`group_concat`函数，把组中的字符串连接为一个字符串，这样我们一次查询，能够知道全部的表名。
