@@ -108,9 +108,9 @@ main:
 但是在这个实例中，我们发现经过`gcc hello.c -o hello.out`和上述 `gcc hello.s -o hello.o`得到的目标文件内容是一样的。
 其`hash`值`(md5)`均为`0688c874b7971c99670ba063497937c3`.
 
-## More details
+## `More details`
 再次考虑以下源文件，我们将其变为目标文件`OBJ`
-```
+```C
 #include<stdio.h>
 int main(){
 	print("hello-world!");
@@ -119,3 +119,41 @@ int main(){
 ```
 gcc -c a.c
 ```
+此时若直接链接文件，输出`a.out`,会有如下警告找不到`_start`，其次链接器认为`printf`是不可识别的符号
+
+![](https://github.com/djh-sudo/MISC/blob/main/hello-world/src/1.jpg)
+
+若在链接时，加上链接的入口`ld -e main a.o`,则没有了警告，但`printf`依旧无法识别
+
+![](https://github.com/djh-sudo/MISC/blob/main/hello-world/src/2.jpg)
+
+此时，若修改源文件为如下代码，我们说什么都不做，链接时，加上程序入口点`main`
+```C
+int main(){}
+```
+
+运行`a.out`,结果出现段错误(`Segmentation Fault`)
+
+![](https://github.com/djh-sudo/MISC/blob/main/hello-world/src/3.jpg)
+
+而用`objdump`查看汇编，其实只有短短几行
+
+![](https://github.com/djh-sudo/MISC/blob/main/hello-world/src/4.jpg)
+
+这里不妨使用`gdb`调试，使用`starti`,使得程序停在main入口
+
+![](https://github.com/djh-sudo/MISC/blob/main/hello-world/src/5.jpg)
+
+当我们运行到`ret`指令时，程序收到终止信号!`crash`。此时，操作系统直接加载了main函数，通过打印系统调用栈，只有一个调用栈，就是main函数
+因此，执行return指令会产生一个非法内存访问，即返回地址可能是某个非法空间值!
+
+![](https://github.com/djh-sudo/MISC/blob/main/hello-world/src/6.jpg)
+
+重新编译我们的源程序，这次一步到位`gcc a.c`,再次使用`gdb`调试，可以看到程序的入口点变为了`_start()`这是系统内置的加载器。
+
+![](https://github.com/djh-sudo/MISC/blob/main/hello-world/src/7.jpg)
+
+`info inferiors`查看当前进程的地址空间,可以看到其进程号为7246,进一步可以看到，进程在停止时，系统中先加载了a.out。
+其次加载了ld-2.31.so文件，这是操作系统给我们最初始的加载器，这个加载器会去加载libc,调用libc的初始化，最后调用main，函数栈帧是完备的，即在执行main之前，操作系统还执行了很多系统调用。
+
+![](https://github.com/djh-sudo/MISC/blob/main/hello-world/src/8.jpg)
