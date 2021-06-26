@@ -127,7 +127,7 @@ gcc -c a.c
 
 ![](https://github.com/djh-sudo/MISC/blob/main/hello-world/src/2.jpg)
 
-此时，若修改源文件为如下代码，我们说什么都不做，链接时，加上程序入口点`main`
+此时，若修改源文件为如下代码，我们什么都不做，链接时，加上程序入口点`main`
 ```C
 int main(){}
 ```
@@ -157,3 +157,27 @@ int main(){}
 其次加载了ld-2.31.so文件，这是操作系统给我们最初始的加载器，这个加载器会去加载libc,调用libc的初始化，最后调用main，函数栈帧是完备的，即在执行main之前，操作系统还执行了很多系统调用。
 
 ![](https://github.com/djh-sudo/MISC/blob/main/hello-world/src/8.jpg)
+
+
+## `Exp`
+下面这个程序能够说明，进程执行的起点和终点都不是以`main`函数作为起点和终点的
+```C
+#include<stdio.h>
+
+__attribute__((constructor)) void hello(){
+        printf("hwllo-world!\n");
+}
+//
+__attribute__((destructor)) void goobye(){
+        printf("good-bye\n");
+}
+
+
+int main(){
+        return 0;
+}
+
+```
+程序输出
+
+![](https://github.com/djh-sudo/MISC/blob/main/hello-world/src/9.jpg)
