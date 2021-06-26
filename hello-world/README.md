@@ -181,3 +181,7 @@ int main(){
 程序输出
 
 ![](https://github.com/djh-sudo/MISC/blob/main/hello-world/src/9.jpg)
+
+通过`strace`也能够看出程序执行`system call`的流程
+
+![](https://github.com/djh-sudo/MISC/blob/main/hello-world/src/10.jpg)
