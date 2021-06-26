@@ -107,3 +107,15 @@ main:
 经过链接，目标文件可以进一步变为可执行文件，一般后缀为.out。
 但是在这个实例中，我们发现经过`gcc hello.c -o hello.out`和上述 `gcc hello.s -o hello.o`得到的目标文件内容是一样的。
 其`hash`值`(md5)`均为`0688c874b7971c99670ba063497937c3`.
+
+## More details
+再次考虑以下源文件，我们将其变为目标文件`OBJ`
+```
+#include<stdio.h>
+int main(){
+	print("hello-world!");
+}
+```
+```
+gcc -c a.c
+```
