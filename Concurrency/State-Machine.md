@@ -12,3 +12,4 @@ int main(){
 }
 ```
 内联汇编产生的随机数并不相同，程序运行的结果每次并不是唯一的！
+![](https://github.com/djh-sudo/MISC/blob/main/Concurrency/src/res1.png)
