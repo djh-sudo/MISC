@@ -15,3 +15,16 @@ int main(){
 * ![](https://github.com/djh-sudo/MISC/blob/main/Concurrency/src/res1.png)
 * ##  `gdb`调试结果，执行语句前后，`rax`寄存器值发生变化
 * ![](https://github.com/djh-sudo/MISC/blob/main/Concurrency/src/res2.png)
+如此一来，状态机会变得非常大，其分支节点会有很多，事实上，不确定性更多来自于系统调用`syscall`！但内存和寄存器的数量是有限的，即使是时间，由于计算机的存储以及精度有限，其状态也是有限。
+`X86-64`的寄存器有`16`个`64`位的寄存器
+* * `rax,rbx,rcx,rdx,rsi,rdi,rbp,rsp`
+* * `r8,r9,r10,r11,r12,r13,r14,r15`
+* `PC`指针/状态寄存器
+* * `rip,rflags,cs,ds,es,fs,gs`
+
+## 并发(`Concurrency`)
+在超标量(`superscalar`)处理器仲，允许我们在一个时钟周期内执行多条指令，例如两条无关的赋值指令，在状态图看来，就像是在结点之间跳跃
+## 应用(`Time-Travel debugging`)
+记录下每次调试的状态，可以跳转到程序任何时间上的状态，可以记录下每次的增量(`delta`)
+`gdb`事实上提供了这样的功能！-`target record-full`指令
+
