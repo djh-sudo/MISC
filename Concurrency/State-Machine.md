@@ -11,5 +11,7 @@ int main(){
         return 0;
 }
 ```
-内联汇编产生的随机数并不相同，程序运行的结果每次并不是唯一的！
-![](https://github.com/djh-sudo/MISC/blob/main/Concurrency/src/res1.png)
+* 内联汇编产生的随机数并不相同，程序运行的结果每次并不是唯一的！
+* ![](https://github.com/djh-sudo/MISC/blob/main/Concurrency/src/res1.png)
+* ##  `gdb`调试结果，执行语句前后，`rax`寄存器值发生变化
+* ![](https://github.com/djh-sudo/MISC/blob/main/Concurrency/src/res2.png)
