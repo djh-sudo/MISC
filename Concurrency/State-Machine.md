@@ -26,5 +26,9 @@ int main(){
 在超标量(`superscalar`)处理器仲，允许我们在一个时钟周期内执行多条指令，例如两条无关的赋值指令，在状态图看来，就像是在结点之间跳跃
 ## 应用(`Time-Travel debugging`)
 记录下每次调试的状态，可以跳转到程序任何时间上的状态，可以记录下每次的增量(`delta`)
-`gdb`事实上提供了这样的功能！-`target record-full`指令
-
+`gdb`事实上提供了这样的功能！，即`target record-full`指令
+同样以随机数例子
+* 执行后
+* ![](https://github.com/djh-sudo/MISC/blob/main/Concurrency/src/res3.png)
+* 反向执行`rsi`
+* ![](https://github.com/djh-sudo/MISC/blob/main/Concurrency/src/res4.png)
