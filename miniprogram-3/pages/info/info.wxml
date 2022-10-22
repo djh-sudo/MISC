@@ -1,0 +1,14 @@
+<!--pages/info/info.wxml-->
+<view class="title">
+	<image class="pic" src='{{img_path}}' style="width:140rpx;height:350rpx"></image>
+	<view class="text">翻金砖小游戏</view>
+</view>
+<progress percent='100' color="seagreen" active stroke-width="30" show-info="true" class="progress" />
+<view class="tts">游戏规则</view>
+<view class="plain">点击翻动砖块，砖块变为另一面，其上下左右的砖块也会跟着翻转，只有全部的砖块都是金色时，本关通过！</view>
+<view class="plain">温馨提示:如果剩下最后两块，可以使用小锤帮助你敲击，完成通关。</view>
+<view class="plain">游戏分为简单和困难，根据自己喜好选择吧！祝你好运！</view>
+<checkbox checked="{{check}}" bindtap="checkboxchange"></checkbox>
+<span></span>
+<span>阅读并同意《相关条款》</span>
+<button bindtap="start" class="btn" disabled="{{flag}}">开始游戏</button>

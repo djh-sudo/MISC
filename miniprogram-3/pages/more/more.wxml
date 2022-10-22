@@ -1,0 +1,66 @@
+<!--pages/more/more.wxml-->
+<!--index.wxml-->
+<view class="pic">
+	<image class="title" src='{{img_path}}' style="width:140rpx;height:170rpx" bindtap="backtoinfo"></image>
+</view>
+<view class="title1" style="background:{{color_check}}">难度版-第{{seq}}关</view>
+<view class="container1">
+	<button bindtap="a1" disabled="{{disabled}}" style="height:100rpx;width:100rpx; background:{{color[0].color1}}"></button>
+	<button bindtap="a2" disabled="{{disabled}}" style="height:100rpx;width:100rpx;background:{{color[1].color1}}"></button>
+	<button bindtap="a3" disabled="{{disabled}}" style="height:100rpx;width:100rpx;background:{{color[2].color1}}"></button>
+	<button bindtap="a4" disabled="{{disabled}}" style="height:100rpx;width:100rpx;background:{{color[3].color1}}"></button>
+  <button bindtap="a5" disabled="{{disabled}}" style="height:100rpx;width:100rpx;background:{{color[4].color1}}"></button>
+</view>
+<view class="container1">
+	<button bindtap="a6" disabled="{{disabled}}" style="height:100rpx;width:100rpx; background:{{color[5].color1}}"></button>
+	<button bindtap="a7" disabled="{{disabled}}" style="height:100rpx;width:100rpx;background:{{color[6].color1}}"></button>
+	<button bindtap="a8" disabled="{{disabled}}" style="height:100rpx;width:100rpx;background:{{color[7].color1}}"></button>
+	<button bindtap="a9" disabled="{{disabled}}" style="height:100rpx;width:100rpx;background:{{color[8].color1}}"></button>
+  <button bindtap="a10" disabled="{{disabled}}" style="height:100rpx;width:100rpx;background:{{color[9].color1}}"></button>
+</view>
+<view class="container1">
+	<button bindtap="a11" disabled="{{disabled}}" style="height:100rpx;width:100rpx; background:{{color[10].color1}}"></button>
+	<button bindtap="a12" disabled="{{disabled}}" style="height:100rpx;width:100rpx;background:{{color[11].color1}}"></button>
+	<button bindtap="a13" disabled="{{disabled}}" style="height:100rpx;width:100rpx;background:{{color[12].color1}}"></button>
+	<button bindtap="a14" disabled="{{disabled}}" style="height:100rpx;width:100rpx;background:{{color[13].color1}}"></button>
+  <button bindtap="a15" disabled="{{disabled}}" style="height:100rpx;width:100rpx;background:{{color[14].color1}}"></button>
+</view>
+<view class="container1">
+	<button bindtap="a16" disabled="{{disabled}}" style="height:100rpx;width:100rpx; background:{{color[15].color1}}"></button>
+	<button bindtap="a17" disabled="{{disabled}}" style="height:100rpx;width:100rpx;background:{{color[16].color1}}"></button>
+	<button bindtap="a18" disabled="{{disabled}}" style="height:100rpx;width:100rpx;background:{{color[17].color1}}"></button>
+	<button bindtap="a19" disabled="{{disabled}}" style="height:100rpx;width:100rpx;background:{{color[18].color1}}"></button>
+  <button bindtap="a20" disabled="{{disabled}}" style="height:100rpx;width:100rpx;background:{{color[19].color1}}"></button>
+</view>
+<view class="container1">
+	<button bindtap="a21" disabled="{{disabled}}" style="height:100rpx;width:100rpx; background:{{color[20].color1}}"></button>
+	<button bindtap="a22" disabled="{{disabled}}" style="height:100rpx;width:100rpx;background:{{color[21].color1}}"></button>
+	<button bindtap="a23" disabled="{{disabled}}" style="height:100rpx;width:100rpx;background:{{color[22].color1}}"></button>
+	<button bindtap="a24" disabled="{{disabled}}" style="height:100rpx;width:100rpx;background:{{color[23].color1}}"></button>
+  <button bindtap="a25" disabled="{{disabled}}" style="height:100rpx;width:100rpx;background:{{color[24].color1}}"></button>
+</view>
+<view class="btn">
+	<button bindtap="resrart" style="background:#FFB6C1;">重新开始</button>
+	<button bindtap="before" style="background:#ADFF2F;">上一关</button>
+	<button bindtap="next" style="background:#ADFF2F;">下一关</button>
+</view>
+<view class="setting">
+		<view>音效</view>
+    <switch checked="true" bindchange="change"></switch>
+		<picker bindchange="bindPickerChange" value="{{index}}" range="{{array}}">
+   <view class='choseQuestion'>
+    {{choseQuestionBank}}|Click me| 
+   </view>
+  </picker>
+	<image class="hit" src='{{img_path1}}' style="width:50rpx;height:70rpx"bindtap="hit"></image>
+  	<image class="hit" src='{{img_path2}}' style="width:50rpx;height:70rpx"bindtap="hitt"></image>
+	</view>
+  <view>
+	<modal title="温馨提示"cancel-text="取消" confirm-text="使用"hidden="{{mHidden}}"bindconfirm="OKK"bindcancel="Cancel">是否使用小锤(仅可以消灭剩余砖块小于3的情况)</modal>
+	</view>
+  <view>
+	<modal title="温馨提示"cancel-text="取消" confirm-text="返回简单版"hidden="{{gHidden}}"bindconfirm="back"bindcancel="Cancel">是否返回简单版</modal>
+	</view>
+    
+    
+

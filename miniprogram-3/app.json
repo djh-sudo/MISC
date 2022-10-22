@@ -1,0 +1,16 @@
+{
+  "pages":[
+    "pages/info/info",
+    "pages/index/index",
+    "pages/more/more",
+    "pages/logs/logs"
+    
+  ],
+  "window":{
+    "backgroundTextStyle":"light",
+    "navigationBarBackgroundColor": "#AFEEEE",
+    "navigationBarTitleText": "翻金砖小游戏",
+    "navigationBarTextStyle":"black"
+  },
+  "sitemapLocation": "sitemap.json"
+}
