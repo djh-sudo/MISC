@@ -25,15 +25,15 @@ def train_NB(train_x, train_y, test_x, test_y):
     report = classification_report(test_y.argmax(axis=1), y_hat)
     print(report)
     print('--' * 20)
-    matrix = sm.confusion_matrix(test_y.argmax(axis=1), y_hat)
-    plot_matrix(matrix, UNSW_NB15.label, 'UNSW_NB15')
+    # matrix = sm.confusion_matrix(test_y.argmax(axis=1), y_hat)
+    # plot_matrix(matrix, UNSW_NB15.label, 'UNSW_NB15')
 
 
 def main():
     # x_train, x_test, y_train, y_test = c_execute('./data')
-    # x_train, x_test, y_train, y_test = k_execute('./KDD99/kddcup.data_10_percent_corrected')
-    x_train, x_test, y_train, y_test = u_execute('./UNSW-NB15/UNSW_NB15_training-set.csv',
-                                                 './UNSW-NB15/UNSW_NB15_testing-set.csv')
+    x_train, x_test, y_train, y_test = k_execute('./KDD99/kddcup.data_10_percent_corrected')
+    # x_train, x_test, y_train, y_test = u_execute('./UNSW-NB15/UNSW_NB15_training-set.csv',
+    #                                              './UNSW-NB15/UNSW_NB15_testing-set.csv')
     spt = x_test.shape[0]
     x = np.vstack((x_train, x_test))
     y = np.vstack((y_train, y_test))

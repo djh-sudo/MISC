@@ -3,7 +3,11 @@ from sklearn.decomposition import PCA
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.decomposition import FastICA
 from sklearn.decomposition import FactorAnalysis
+from sklearn.preprocessing import normalize
+
 from CIC_IDS2017 import c_execute
+from sklearn.feature_selection import SelectKBest
+from sklearn.feature_selection import chi2
 
 
 # Low Variance Filter
@@ -22,7 +26,7 @@ def low_var_filter(x_data):
 
 
 # Random Forest
-def RF(x_data, y_label, n=20):
+def RF(x_data, y_label, n=50):
     model = RandomForestClassifier(random_state=0, n_estimators=500, n_jobs=-1)
     model.fit(x_data, y_label)
     importance = model.feature_importances_
@@ -32,7 +36,7 @@ def RF(x_data, y_label, n=20):
 
 
 # Principal Component Analysis
-def _PCA(x_data, threshold=0.98):
+def _PCA(x_data, threshold=0.9):
     pca = PCA(threshold)
     pca.fit(x_data)
     return pca.fit_transform(x_data)
@@ -50,11 +54,12 @@ def FA(x_data, n=10):
     return fa
 
 
-def p_execute(x_data, y_label, choose='RF'):
+def p_execute(x_data, y_label, choose='PCA'):
     x_data = low_var_filter(x_data)
     choose = choose.upper()
     if choose == 'RF':
-        return RF(x_data, y_label)
+        x_data = RF(x_data, y_label)
+        return x_data
     elif choose == 'PCA':
         return _PCA(x_data)
     elif choose == 'ICA':

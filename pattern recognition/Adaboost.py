@@ -12,10 +12,10 @@ import KDD99
 import UNSW_NB15
 
 
-def train_NB(train_x, train_y, test_x, test_y):
-    print('AdaBoost training ...')
+def train_NB(train_x, train_y, test_x, test_y, n=50):
+    print('AdaBoost training ...', n)
     t1 = time.time()
-    ada = AdaBoostClassifier(n_estimators=50)
+    ada = AdaBoostClassifier(n_estimators=n)
     model = ada.fit(train_x, train_y.argmax(axis=1))
     y_hat = model.predict(test_x)
     t2 = time.time()
@@ -25,8 +25,8 @@ def train_NB(train_x, train_y, test_x, test_y):
     report = classification_report(test_y.argmax(axis=1), y_hat)
     print(report)
     print('--' * 20)
-    matrix = sm.confusion_matrix(test_y.argmax(axis=1), y_hat)
-    plot_matrix(matrix, KDD99.label, 'KDD99')
+    # matrix = sm.confusion_matrix(test_y.argmax(axis=1), y_hat)
+    # plot_matrix(matrix, KDD99.label, 'KDD99')
 
 
 def main():

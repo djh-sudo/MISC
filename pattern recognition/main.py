@@ -1,3 +1,5 @@
+import time
+
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.naive_bayes import GaussianNB
@@ -36,22 +38,26 @@ def meta_model():
 
 
 def parameter():
-    params = {'kneighborsclassifier__n_neighbors': [5, 9],
-              'randomforestclassifier__n_estimators': [50, 100],
-              'adaboostclassifier__n_estimators': [50],
-              'adaboostclassifier__learning_rate': [0.1, 1],
-              'logisticregression__C': [1, 0.1]
+    params = {'kneighborsclassifier__n_neighbors': [5],
+              'randomforestclassifier__n_estimators': [500],
+              'adaboostclassifier__n_estimators': [100],
+              'adaboostclassifier__learning_rate': [1],
+              'logisticregression__C': [0.01]
               }
     return params
 
 
 def train(x, y):
+    t1 = time.time()
     st = Stacking(classifier=base_model(),
                   meta=meta_model(),
                   parameter=parameter(),
+                  cross_validation=5
                   )
     print('start training ...')
     st.fit(x, y)
+    t2 = time.time()
+    print('using', t2 - t1, 'sec')
     st.result()
     print('best parameter', st.best_parameter())
     print('acc', st.accuracy())
@@ -65,24 +71,25 @@ def test(x, y, st: Stacking):
     print('acc', acc)
     report = classification_report(y.argmax(axis=1), y_hat)
     print(report)
-    matrix = sm.confusion_matrix(y.argmax(axis=1), y_hat)
-    utils.plot_matrix(matrix, CIC_IDS2017.label, 'CIC-IDS2017')
+    # matrix = sm.confusion_matrix(y.argmax(axis=1), y_hat)
+    # utils.plot_matrix(matrix, CIC_IDS2017.label, 'CIC-IDS2017')
 
 
 def main():
     # load data
-    x_train, x_test, y_train, y_test = c_execute('./data')
+    # x_train, x_test, y_train, y_test = c_execute('./data')
     # x_train, x_test, y_train, y_test = k_execute('./KDD99/kddcup.data_10_percent_corrected')
-    # x_train, x_test, y_train, y_test = u_execute('./UNSW-NB15/UNSW_NB15_training-set.csv',
-    #                                              './UNSW-NB15/UNSW_NB15_testing-set.csv')
+    x_train, x_test, y_train, y_test = u_execute('./UNSW-NB15/UNSW_NB15_training-set.csv',
+                                                 './UNSW-NB15/UNSW_NB15_testing-set.csv')
     # preprocess
     spt = x_test.shape[0]
     x = np.vstack((x_train, x_test))
     y = np.vstack((y_train, y_test))
     x = p_execute(x, y)
     x_train, x_test = x[:-spt], x[-spt:]
-    visual(x_test, y_test, 9)
+    # visual(x_test, y_test, 9)
     print('train shape', x_train.shape)
+    exit(0)
     model = train(x_train, y_train.argmax(axis=1))
     test(x_test, y_test, model)
 

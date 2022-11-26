@@ -2,6 +2,8 @@ import pandas as pd
 import os
 
 from sklearn.model_selection import StratifiedShuffleSplit
+from sklearn.preprocessing import normalize
+
 from utils import *
 
 exclusive_col = ['proto']
@@ -56,6 +58,7 @@ def sample(data):
     print(data['attack_cat'].value_counts())
     x_columns = data.columns.drop(['label', 'attack_cat'])
     x = data[x_columns].values
+    x = normalize(x, axis=0)
     dummies = pd.get_dummies(data['attack_cat'])
     y = dummies.values
     sss = StratifiedShuffleSplit(n_splits=1, test_size=0.3)

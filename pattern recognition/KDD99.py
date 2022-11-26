@@ -9,6 +9,7 @@
 import os
 import pandas as pd
 from sklearn.model_selection import StratifiedShuffleSplit
+from sklearn.preprocessing import normalize
 
 from utils import *
 
@@ -108,7 +109,7 @@ def k_execute(full_path: str):
     for train_index, test_index in sss.split(x, y):
         x_train, x_test = x[train_index, :], x[test_index, :]
         y_train, y_test = y[train_index, :], y[test_index, :]
-    x_train, y_train = sub_resample(x_train, y_train, 10000)
+    x_train, y_train = sub_resample(x_train, y_train, 20000)
     x_test, y_test = sub_resample(x_test, y_test, 300)
     return x_train, x_test, y_train, y_test
 
